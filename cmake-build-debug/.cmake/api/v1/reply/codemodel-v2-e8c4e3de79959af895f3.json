@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Projet_Enveloppe_Convexe",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Projet_Enveloppe_Convexe::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Projet_Enveloppe_Convexe-Debug-3c297d00a319c3fdfb63.json",
+					"name" : "Projet_Enveloppe_Convexe",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/mnt/c/Users/theop/OneDrive/Bureau/Universit\u00e9/Licence 2/Semestre 1/Algorithmique et Structure de Donn\u00e9es/Projet Enveloppe Convexe/cmake-build-debug",
+		"source" : "/mnt/c/Users/theop/OneDrive/Bureau/Universit\u00e9/Licence 2/Semestre 1/Algorithmique et Structure de Donn\u00e9es/Projet Enveloppe Convexe"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
