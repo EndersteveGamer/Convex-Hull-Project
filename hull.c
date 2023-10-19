@@ -6,11 +6,17 @@
 
 #define BUFFSIZE 100
 
+/**
+ * A 2D vector
+ */
 struct vec {
     double x;
     double y;
 };
 
+/**
+ * A structure representing a cloud of points as a dynamic list
+ */
 struct vecset {
     struct vec *data;
     size_t size;
@@ -238,16 +244,30 @@ void vecset_push(struct vecset *self, struct vec p) {
     vecset_add(self, &p);
 }
 
+/**
+ * Removes the last vector of a vecset
+ * @param self The vecset to remove a vector from
+ */
 void vecset_pop(struct vecset *self) {
     assert(self->size > 0);
     self->size--;
 }
 
+/**
+ * Returns the element at the end of a vecset
+ * @param self The vecset to get the vector from
+ * @return The last vector of the vecset
+ */
 const struct vec *vecset_top(const struct vecset *self) {
     assert(self->size > 0);
     return &self->data[self->size - 1];
 }
 
+/**
+ * Returns the second element of a vecset from the end
+ * @param self The vecset to get the vector from
+ * @return The second last vector of the vecset
+ */
 const struct vec *vecset_second(const struct vecset *self) {
     assert(self->size > 1);
     return &self->data[self->size - 2];
