@@ -39,6 +39,10 @@ struct vec vec_create(double x, double y) {
     return new;
 }
 
+void vec_print(struct vec *self) {
+    printf("x: %f, y: %f", self->x, self->y);
+}
+
 /**
  * Returns the dot of two vectors
  * @param v1 The first vector
@@ -348,7 +352,6 @@ void tests() {
     assert(min->x == 0 && min->y == 0);
 
     // Test vecset_sort (to finish later)
-    /*
     vecset_sort(&vecset1, &comp_distance_to_origin, NULL);
     printf("x: %f, y: %f\n", vecset1.data[0].x, vecset1.data[0].y);
     printf("x: %f, y: %f\n", vecset1.data[1].x, vecset1.data[1].y);
@@ -356,7 +359,6 @@ void tests() {
     assert(vecset1.data[0].x == 0 && vecset1.data[0].y == 0);
     assert(vecset1.data[1].x == 5 && vecset1.data[1].y == 5);
     assert(vecset1.data[2].x == 10 && vecset1.data[2].y == 10);
-     */
     vecset_destroy(&vecset1);
 
     // Test vecset_push && vecset_top && vecset_second
