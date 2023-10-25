@@ -8,18 +8,18 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Projet_Enveloppe_Convexe">
-				<Option output="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug/Projet_Enveloppe_Convexe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
+				<Option output="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug/Projet_Enveloppe_Convexe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -30,15 +30,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 Projet_Enveloppe_Convexe"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 Projet_Enveloppe_Convexe"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Projet_Enveloppe_Convexe/fast">
-				<Option output="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug/Projet_Enveloppe_Convexe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
+				<Option output="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug/Projet_Enveloppe_Convexe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -49,37 +49,37 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 Projet_Enveloppe_Convexe/fast"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 Projet_Enveloppe_Convexe/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 1/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence\ 2/Semestre\ 3/Algorithmique\ et\ Structure\ de\ Données/Projet\ Enveloppe\ Convexe/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/hull.c">
+		<Unit filename="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/hull.c">
 			<Option target="Projet_Enveloppe_Convexe"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 1/Algorithmique et Structure de Données/Projet Enveloppe Convexe/CMakeLists.txt">
+		<Unit filename="/mnt/c/Users/theop/OneDrive/Bureau/Université/Licence 2/Semestre 3/Algorithmique et Structure de Données/Projet Enveloppe Convexe/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

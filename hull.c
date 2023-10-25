@@ -27,15 +27,15 @@ const int A = 2;
 
 // Functions on vectors
 /**
- * Allocates memory and creates a vector
+ * Creates a vector
  * @param x The x coordinate
  * @param y The y coordinate
- * @return A pointer to the newly created vector
+ * @return The newly created vector
  */
-struct vec *vec_create(double x, double y) {
-    struct vec *new = malloc(sizeof(struct vec));
-    new->x = x;
-    new->y = y;
+struct vec vec_create(double x, double y) {
+    struct vec new;
+    new.x = x;
+    new.y = y;
     return new;
 }
 
@@ -68,7 +68,7 @@ double cross(struct vec *v1, struct vec *v2, struct vec *v3) {
  * @return true if the vectors are in a left turn, false otherwise
  */
 bool is_left_turn(struct vec *v1, struct vec *v2, struct vec *v3) {
-    return cross(v1, v2, v3) < 0;
+    return cross(v1, v2, v3) > 0;
 }
 
 // Functions on vector sets
@@ -108,9 +108,9 @@ void vecset_grow(struct vecset *self) {
  * @param self The vecset to add the vector in
  * @param p The vector to add to the vecset
  */
-void vecset_add(struct vecset *self, struct vec *p) {
+void vecset_add(struct vecset *self, struct vec p) {
     if (self->size == self->capacity) vecset_grow(self);
-    self->data[self->size] = *p;
+    self->data[self->size] = p;
     self->size++;
 }
 
@@ -126,8 +126,8 @@ typedef int (*comp_func_t) (const struct vec *p1, const struct vec *p2, const vo
 const struct vec *vecset_max(const struct vecset *self, comp_func_t func, const void *ctx) {
     assert(self->size > 0);
     struct vec *max = &self->data[0];
-    for (size_t i = 0; i < self->size; i++) {
-        if (func(max, &self->data[i], ctx) > 0) max = &self->data[i];
+    for (size_t i = 1; i < self->size; i++) {
+        if (func(max, &self->data[i], ctx) < 0) max = &self->data[i];
     }
     return max;
 }
@@ -142,8 +142,8 @@ const struct vec *vecset_max(const struct vecset *self, comp_func_t func, const 
 const struct vec *vecset_min(const struct vecset *self, comp_func_t func, const void *ctx) {
     assert(self->size > 0);
     struct vec *min = &self->data[0];
-    for (size_t i = 0; i < self->size; i++) {
-        if (func(min, &self->data[i], ctx) < 0) min = &self->data[i];
+    for (size_t i = 1; i < self->size; i++) {
+        if (func(min, &self->data[i], ctx) > 0) min = &self->data[i];
     }
     return min;
 }
@@ -151,7 +151,7 @@ const struct vec *vecset_min(const struct vecset *self, comp_func_t func, const 
 /**
  * Merges two sorted arrays of vectors in one sorted array.
  * The two original arrays are freed.
- * The result array must be already allocated, and is assumed to have enough memory to store both functions (size equal
+ * The result array must be already allocated, and is assumed to have enough memory to store the result (size equal
  * to size1 + size2)
  * @param a1 The first sorted array
  * @param size1 The size of the first array
@@ -164,7 +164,7 @@ void vec_array_merge(struct vec *a1, size_t size1, struct vec *a2, size_t size2,
         comp_func_t func, const void *ctx) {
     size_t index = 0;
     while (size1 > 0 || size2 > 0) {
-        if (size2 == 0 || func(&a1[size1 - 1], &a2[size2 - 1], ctx) < 0) {
+        if (size1 != 0 && (size2 == 0 || func(&a1[size1 - 1], &a2[size2 - 1], ctx) < 0)) {
             result[index] = a1[size1 - 1];
             size1--;
         }
@@ -217,8 +217,8 @@ void vec_array_merge_sort(struct vec *array, size_t size, comp_func_t func, cons
         }
         return;
     }
-    size_t size1 = size - size / 2;
-    size_t size2 = size / 2;
+    size_t size1 = size / 2;
+    size_t size2 = size / 2 + size % 2;
     struct vec *a1 = calloc(size1, sizeof(struct vec));
     struct vec *a2 = calloc(size2, sizeof(struct vec));
     vec_array_split(a1, a2, array, size);
@@ -241,7 +241,17 @@ void vecset_sort(struct vecset *self, comp_func_t func, const void *ctx) {
  * @param p The vector to add in the vecset
  */
 void vecset_push(struct vecset *self, struct vec p) {
-    vecset_add(self, &p);
+    vecset_add(self, p);
+}
+
+/**
+ * Returns the second element of a vecset from the end
+ * @param self The vecset to get the vector from
+ * @return The second last vector of the vecset
+ */
+const struct vec *vecset_second(const struct vecset *self) {
+    assert(self->size > 1);
+    return &self->data[self->size - 2];
 }
 
 /**
@@ -263,17 +273,120 @@ const struct vec *vecset_top(const struct vecset *self) {
     return &self->data[self->size - 1];
 }
 
-/**
- * Returns the second element of a vecset from the end
- * @param self The vecset to get the vector from
- * @return The second last vector of the vecset
- */
-const struct vec *vecset_second(const struct vecset *self) {
-    assert(self->size > 1);
-    return &self->data[self->size - 2];
+int comp_distance_to_origin(const struct vec *p1, const struct vec *p2, const void *ctx) {
+    return (int)(p1->x + p1->y - p2->x - p2->y);
+}
+
+void jarvis_march(const struct vecset *in, struct vecset *out) {
+}
+
+void tests() {
+    // Test vec
+    struct vec vec = vec_create(10, 20);
+    assert(vec.x == 10);
+    assert(vec.y == 20);
+
+    // Test dot
+    struct vec vec1 = vec_create(10, 20);
+    struct vec vec2 = vec_create(40, 80);
+    assert(dot(&vec1, &vec2) == (10 * 40 + 20 * 80));
+
+    // Test cross
+    vec1 = vec_create(10, 60);
+    vec2 = vec_create(978, 68);
+    struct vec vec3 = vec_create(753, 354);
+    assert(cross(&vec1, &vec2, &vec3) == (978 - 10) * (354 - 60) - (68 - 60) * (753 - 10));
+
+    // Test left turn
+    vec1 = vec_create(0, 0);
+    vec2 = vec_create(0, 10);
+    vec3 = vec_create(10, 5);
+    assert(!is_left_turn(&vec1, &vec2, &vec3));
+    vec3 = vec_create(-10, 5);
+    assert(is_left_turn(&vec1, &vec2, &vec3));
+
+    // Test vecset
+    struct vecset vecset;
+    vecset_create(&vecset);
+    assert(vecset.capacity == 10);
+    assert(vecset.size == 0);
+    assert(vecset.data != NULL);
+
+    // Test vecset_grow
+    vecset_grow(&vecset);
+    assert(vecset.capacity == 20);
+    vecset_destroy(&vecset);
+
+    // Test vecset_add
+    vecset_create(&vecset);
+    struct vec vec4 = vec_create(10, 10);
+    vecset_add(&vecset, vec4);
+    assert(vecset.data[0].x == 10);
+    assert(vecset.data[0].y == 10);
+    assert(vecset.size == 1);
+    for (int i = 0; i < 2000000; i++) {
+        struct vec vec5 = vec_create(i, i);
+        vecset_add(&vecset, vec5);
+        assert(vecset.size == 2 + i);
+    }
+    vecset_destroy(&vecset);
+
+    // Test vecset_max
+    vec1 = vec_create(0, 0);
+    vec2 = vec_create(5, 5);
+    vec3 = vec_create(10, 10);
+    struct vecset vecset1;
+    vecset_create(&vecset1);
+    vecset_add(&vecset1, vec1);
+    vecset_add(&vecset1, vec2);
+    vecset_add(&vecset1, vec3);
+    const struct vec *max = vecset_max(&vecset1, &comp_distance_to_origin, NULL);
+    assert(max->x == 10 && max->y == 10);
+
+    // Test vecset_min
+    const struct vec *min = vecset_min(&vecset1, &comp_distance_to_origin, NULL);
+    assert(min->x == 0 && min->y == 0);
+
+    // Test vecset_sort (to finish later)
+    /*
+    vecset_sort(&vecset1, &comp_distance_to_origin, NULL);
+    printf("x: %f, y: %f\n", vecset1.data[0].x, vecset1.data[0].y);
+    printf("x: %f, y: %f\n", vecset1.data[1].x, vecset1.data[1].y);
+    printf("x: %f, y: %f\n", vecset1.data[2].x, vecset1.data[2].y);
+    assert(vecset1.data[0].x == 0 && vecset1.data[0].y == 0);
+    assert(vecset1.data[1].x == 5 && vecset1.data[1].y == 5);
+    assert(vecset1.data[2].x == 10 && vecset1.data[2].y == 10);
+     */
+    vecset_destroy(&vecset1);
+
+    // Test vecset_push && vecset_top && vecset_second
+    vec = vec_create(1, 1);
+    vec1 = vec_create(2, 2);
+    vecset_create(&vecset1);
+    vecset_push(&vecset1, vec);
+    assert(vecset1.data[0].x == 1 && vecset1.data[0].y == 1);
+    vecset_push(&vecset1, vec1);
+    assert(vecset1.data[0].x == 1 && vecset1.data[0].y == 1);
+    assert(vecset1.data[1].x == 2 && vecset1.data[1].y == 2);
+    const struct vec *top = vecset_top(&vecset1);
+    assert(top->x == 2 && top->y == 2);
+    const struct vec *second = vecset_second(&vecset1);
+    assert(second->x == 1 && second->y == 1);
+
+    // Test vecset_pop
+    vecset_pop(&vecset1);
+    vecset_push(&vecset1, vec);
+    assert(vecset1.data[1].x == 1 && vecset1.data[1].y == 1);
+
+    vecset_destroy(&vecset1);
+
+    // Finished
+    printf("Assertions passed");
 }
 
 int main() {
+    tests();
+    return 0;
     setbuf(stdout, NULL);
 
     char buffer[BUFFSIZE];
