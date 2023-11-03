@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Projet_Enveloppe_Convexe
+# Target rules for targets named Hull
 
 # Build rule for target.
-Projet_Enveloppe_Convexe: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Projet_Enveloppe_Convexe
-.PHONY : Projet_Enveloppe_Convexe
+Hull: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Hull
+.PHONY : Hull
 
 # fast build rule for target.
-Projet_Enveloppe_Convexe/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projet_Enveloppe_Convexe.dir/build.make CMakeFiles/Projet_Enveloppe_Convexe.dir/build
-.PHONY : Projet_Enveloppe_Convexe/fast
+Hull/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Hull.dir/build.make CMakeFiles/Hull.dir/build
+.PHONY : Hull/fast
 
 hull.o: hull.c.o
 .PHONY : hull.o
 
 # target to build an object file
 hull.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projet_Enveloppe_Convexe.dir/build.make CMakeFiles/Projet_Enveloppe_Convexe.dir/hull.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Hull.dir/build.make CMakeFiles/Hull.dir/hull.c.o
 .PHONY : hull.c.o
 
 hull.i: hull.c.i
@@ -142,7 +142,7 @@ hull.i: hull.c.i
 
 # target to preprocess a source file
 hull.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projet_Enveloppe_Convexe.dir/build.make CMakeFiles/Projet_Enveloppe_Convexe.dir/hull.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Hull.dir/build.make CMakeFiles/Hull.dir/hull.c.i
 .PHONY : hull.c.i
 
 hull.s: hull.c.s
@@ -150,7 +150,7 @@ hull.s: hull.c.s
 
 # target to generate assembly for a file
 hull.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projet_Enveloppe_Convexe.dir/build.make CMakeFiles/Projet_Enveloppe_Convexe.dir/hull.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Hull.dir/build.make CMakeFiles/Hull.dir/hull.c.s
 .PHONY : hull.c.s
 
 # Help Target
@@ -161,7 +161,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Projet_Enveloppe_Convexe"
+	@echo "... Hull"
 	@echo "... hull.o"
 	@echo "... hull.i"
 	@echo "... hull.s"

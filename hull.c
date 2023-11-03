@@ -1,3 +1,5 @@
+// Théo Pariney
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -288,13 +290,37 @@ const struct vec *vecset_top(const struct vecset *self) {
     return &self->data[self->size - 1];
 }
 
+/**
+ * <p>
+ * Compares two points based on their distance to origin
+ * </p>
+ * <p>
+ * Used only in unary tests
+ * </p>
+ * @param p1 The first point
+ * @param p2 The second point
+ * @param ctx The context for the function (unused)
+ * @return A strictly positive number if p1 is further to the origin than p2, strictly negative if p2 is further, and
+ * equal to 0 if both points have the same distance to the origin
+ */
 int comp_distance_to_origin(const struct vec *p1, const struct vec *p2, const void *ctx) {
     return (int)(p1->x + p1->y - p2->x - p2->y);
 }
 
-void jarvis_march(const struct vecset *in, struct vecset *out) {
+struct vec *vecset_leftmost_point(const struct vecset *self) {
+    if (self->size == 0) return NULL;
+    struct vec *leftmost = self->data;
+    struct vec *curr = self->data + 1;
+    for (size_t i = 0; i < self->size; i++) {
+        if (curr->x < leftmost->x) leftmost = curr;
+        curr++;
+    }
+    return leftmost;
 }
 
+/**
+ * Unary tests on all the functions
+ */
 void tests() {
     // Test vec
     struct vec vec = vec_create(10, 20);
@@ -423,19 +449,48 @@ void tests() {
 
     vecset_destroy(&vecset1);
 
+    // Test vecset_leftmost_point
+    vecset_create(&vecset1);
+    vec1 = vec_create(0, 0);
+    vecset_add(&vecset1, vec3);
+    vecset_add(&vecset1, vec2);
+    vecset_add(&vecset1, vec1);
+    struct vec *leftmost = vecset_leftmost_point(&vecset1);
+    assert(leftmost->x == vec1.x && leftmost->y == vec1.y);
+    vecset_destroy(&vecset1);
+
     // Finished
     printf("Assertions passed");
 }
 
+
+void jarvis_march(const struct vecset *in, struct vecset *out) {
+    struct vec *leftmost = vecset_leftmost_point(in);
+    struct vec *curr = leftmost;
+    do {
+        vecset_add(out, *curr);
+        struct vec *N = &in->data[0];
+        for (size_t i = 0; i < in->size; i++) {
+            if (is_left_turn(curr, &in->data[i], N)) N = &in->data[i];
+        }
+        curr = N;
+    } while (leftmost->x != curr->x || leftmost->y != curr->y);
+}
+
 int main() {
-    tests();
-    return 0;
-    setbuf(stdout, NULL);
+    // tests();
+    // return 0;
+    setbuf(stdout, NULL); // Avoid buffering in the output
 
     char buffer[BUFFSIZE];
     fgets(buffer, BUFFSIZE, stdin);
 
     size_t count = strtol(buffer, NULL, 10);
+
+    struct vecset vecset;
+    vecset_create(&vecset);
+    struct vecset out;
+    vecset_create(&out);
 
     for (size_t i = 0; i < count; ++i) {
         struct vec p;
@@ -445,6 +500,13 @@ int main() {
         char *endptr = buffer;
         p.x = strtod(endptr, &endptr);
         p.y = strtod(endptr, &endptr);
+
+        vecset_add(&vecset, p);
     }
+
+    jarvis_march(&vecset, &out);
+
+    vecset_destroy(&vecset);
+    vecset_destroy(&out);
     return 0;
 }

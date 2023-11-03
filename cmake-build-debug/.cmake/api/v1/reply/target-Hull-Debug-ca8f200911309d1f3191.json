@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Projet_Enveloppe_Convexe"
+			"path" : "Hull"
 		}
 	],
 	"backtrace" : 1,
@@ -56,7 +56,7 @@
 			]
 		}
 	],
-	"id" : "Projet_Enveloppe_Convexe::@6890427a1f51a3e7e1df",
+	"id" : "Hull::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -72,8 +72,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "Projet_Enveloppe_Convexe",
-	"nameOnDisk" : "Projet_Enveloppe_Convexe",
+	"name" : "Hull",
+	"nameOnDisk" : "Hull",
 	"paths" : 
 	{
 		"build" : ".",

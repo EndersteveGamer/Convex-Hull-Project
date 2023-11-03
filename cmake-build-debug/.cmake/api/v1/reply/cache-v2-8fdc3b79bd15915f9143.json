@@ -771,7 +771,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "Projet_Enveloppe_Convexe"
+			"value" : "Hull"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1052,6 +1052,42 @@
 			],
 			"type" : "BOOL",
 			"value" : "FALSE"
+		},
+		{
+			"name" : "Hull_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/mnt/c/Users/theop/OneDrive/Bureau/Universit\u00e9/Licence 2/Semestre 3/Algorithmique et Structure de Donn\u00e9es/Projet Enveloppe Convexe/cmake-build-debug"
+		},
+		{
+			"name" : "Hull_IS_TOP_LEVEL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "ON"
+		},
+		{
+			"name" : "Hull_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/mnt/c/Users/theop/OneDrive/Bureau/Universit\u00e9/Licence 2/Semestre 3/Algorithmique et Structure de Donn\u00e9es/Projet Enveloppe Convexe"
 		},
 		{
 			"name" : "ProcessorCount_cmd_nproc",
