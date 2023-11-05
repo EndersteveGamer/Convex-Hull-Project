@@ -101,10 +101,14 @@ void vecset_destroy(struct vecset *self) {
     free(self->data);
 }
 
+/**
+ * Prints a vecset in the same format than the hull-generator produces them
+ * @param self The vecset to print
+ */
 void vecset_print(struct vecset *self) {
+    printf("%zu\n", self->size);
     for (size_t i = 0; i < self->size; i++) {
-        vec_print(&self->data[i]);
-        printf("\n");
+        printf("%f %f\n", self->data[i].x, self->data[i].y);
     }
 }
 
@@ -131,6 +135,10 @@ void vecset_add(struct vecset *self, struct vec p) {
     self->size++;
 }
 
+/**
+ * A typedef corresponding to functions taking two vectors and comparing them, returning an int equal to 0 if they are
+ * equal, inferior to 0 if the first vector is smaller than the second one, and superior to 0 otherwise
+ */
 typedef int (*comp_func_t) (const struct vec *p1, const struct vec *p2, const void *ctx);
 
 /**
@@ -307,8 +315,13 @@ int comp_distance_to_origin(const struct vec *p1, const struct vec *p2, const vo
     return (int)(p1->x + p1->y - p2->x - p2->y);
 }
 
+/**
+ * Returns the leftmost point in a vecset (the point with the lowest x)
+ * @param self The vecset to find the leftmost point in
+ * @return The leftmost point in the vecset
+ */
 struct vec *vecset_leftmost_point(const struct vecset *self) {
-    if (self->size == 0) return NULL;
+    assert(self->size != 0);
     struct vec *leftmost = self->data;
     struct vec *curr = self->data + 1;
     for (size_t i = 0; i < self->size; i++) {
@@ -463,23 +476,33 @@ void tests() {
     printf("Assertions passed");
 }
 
-
+/**
+ * A Jarvis March algorithm for finding the convex hull of a cloud of points
+ * @param in The cloud of points to search the convex hull in
+ * @param out A vecset containing all the points that are part of the convex hull
+ */
 void jarvis_march(const struct vecset *in, struct vecset *out) {
     struct vec *leftmost = vecset_leftmost_point(in);
     struct vec *curr = leftmost;
     do {
         vecset_add(out, *curr);
         struct vec *N = &in->data[0];
-        for (size_t i = 0; i < in->size; i++) {
+        for (size_t i = 1; i < in->size; i++) {
             if (is_left_turn(curr, &in->data[i], N)) N = &in->data[i];
         }
         curr = N;
     } while (leftmost->x != curr->x || leftmost->y != curr->y);
 }
 
+/**
+ * The main function executing the pilot for getting the file containing the cloud of points, parsing it, and printing
+ * back the convex hull
+ * @return 0 if everything executed correctly, or the error code otherwise
+ */
 int main() {
     // tests();
     // return 0;
+
     setbuf(stdout, NULL); // Avoid buffering in the output
 
     char buffer[BUFFSIZE];
@@ -487,8 +510,8 @@ int main() {
 
     size_t count = strtol(buffer, NULL, 10);
 
-    struct vecset vecset;
-    vecset_create(&vecset);
+    struct vecset in;
+    vecset_create(&in);
     struct vecset out;
     vecset_create(&out);
 
@@ -501,12 +524,14 @@ int main() {
         p.x = strtod(endptr, &endptr);
         p.y = strtod(endptr, &endptr);
 
-        vecset_add(&vecset, p);
+        vecset_add(&in, p);
     }
 
-    jarvis_march(&vecset, &out);
+    jarvis_march(&in, &out);
 
-    vecset_destroy(&vecset);
+    vecset_print(&out);
+
+    vecset_destroy(&in);
     vecset_destroy(&out);
     return 0;
 }
