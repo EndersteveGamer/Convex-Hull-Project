@@ -332,6 +332,18 @@ struct vec *vecset_leftmost_point(const struct vecset *self) {
 }
 
 /**
+ * Given a vecset and a vector, finds the index of the vector in the vecset
+ * @param self The vecset to search the vector in
+ * @param vec The vector to find
+ * @return The index of the vector if it is in the vecset, -1 otherwise
+ */
+size_t vecset_vec_index(const struct vecset *self, const struct vec *vec) {
+    size_t index = 0;
+    while ((self->data[index].x != vec->x || self->data[index].x != vec->y) && index < self->size) index++;
+    return index < self->size ? index : -1;
+}
+
+/**
  * Unary tests on all the functions
  */
 void tests() {
@@ -482,16 +494,21 @@ void tests() {
  * @param out A vecset containing all the points that are part of the convex hull
  */
 void jarvis_march(const struct vecset *in, struct vecset *out) {
-    struct vec *leftmost = vecset_leftmost_point(in);
-    struct vec *curr = leftmost;
+    if (in->size == 0) return;
+    struct vec *F = vecset_leftmost_point(in);
+    size_t FIndex = 0;
+    while (in->data[FIndex].x != F->x || in->data[FIndex].y != F->y) FIndex++;
+    struct vec *C = F;
     do {
-        vecset_add(out, *curr);
-        struct vec *N = &in->data[0];
-        for (size_t i = 1; i < in->size; i++) {
-            if (is_left_turn(curr, &in->data[i], N)) N = &in->data[i];
+        vecset_add(out, *C);
+        struct vec *N = &in->data[(FIndex + 1) % in->size];
+        FIndex = vecset_vec_index(in, N);
+        for (size_t i = 0; i < in->size; i++) {
+            if (in->data[i].x == F->x && in->data[i].y == F->y) continue;
+            if (is_left_turn(C, &in->data[i], N)) N = &in->data[i];
         }
-        curr = N;
-    } while (leftmost->x != curr->x || leftmost->y != curr->y);
+        C = N;
+    } while (F->x != C->x || F->y != C->y);
 }
 
 /**
