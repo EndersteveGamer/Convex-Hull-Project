@@ -1,0 +1,1 @@
+wsl.exe ./hull-viewer ./cmake-build-debug/Hull < points.log

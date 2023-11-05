@@ -81,6 +81,16 @@ bool is_left_turn(struct vec *v1, struct vec *v2, struct vec *v3) {
     return cross(v1, v2, v3) > 0;
 }
 
+/**
+ * Checks if two vectors are equal
+ * @param v1 The first vector
+ * @param v2 The second vector
+ * @return true if the two vectors are equal, false otherwise
+ */
+bool vec_equals(const struct vec *v1, const struct vec *v2) {
+    return v1->x == v2->x && v1->y == v2->y;
+}
+
 // Functions on vector sets
 /**
  * Creates a vecset and allocated its default capacity
@@ -322,9 +332,10 @@ int comp_distance_to_origin(const struct vec *p1, const struct vec *p2, const vo
  */
 struct vec *vecset_leftmost_point(const struct vecset *self) {
     assert(self->size != 0);
+    if (self->size == 1) return &self->data[0];
     struct vec *leftmost = self->data;
     struct vec *curr = self->data + 1;
-    for (size_t i = 0; i < self->size; i++) {
+    for (size_t i = 0; i < self->size - 1; i++) {
         if (curr->x < leftmost->x) leftmost = curr;
         curr++;
     }
@@ -339,12 +350,12 @@ struct vec *vecset_leftmost_point(const struct vecset *self) {
  */
 size_t vecset_vec_index(const struct vecset *self, const struct vec *vec) {
     size_t index = 0;
-    while ((self->data[index].x != vec->x || self->data[index].x != vec->y) && index < self->size) index++;
+    while (!vec_equals(&self->data[index], vec) && index < self->size) index++;
     return index < self->size ? index : -1;
 }
 
 /**
- * Unary tests on all the functions
+ * Unary tests on all the little functions (tests on convex hull algorithms are made manually)
  */
 void tests() {
     // Test vec
@@ -496,19 +507,18 @@ void tests() {
 void jarvis_march(const struct vecset *in, struct vecset *out) {
     if (in->size == 0) return;
     struct vec *F = vecset_leftmost_point(in);
-    size_t FIndex = 0;
-    while (in->data[FIndex].x != F->x || in->data[FIndex].y != F->y) FIndex++;
+    size_t FIndex = vecset_vec_index(in, F);
     struct vec *C = F;
     do {
         vecset_add(out, *C);
-        struct vec *N = &in->data[(FIndex + 1) % in->size];
-        FIndex = vecset_vec_index(in, N);
+        FIndex = (FIndex + 1) % in->size;
+        struct vec *N = &in->data[FIndex];
         for (size_t i = 0; i < in->size; i++) {
-            if (in->data[i].x == F->x && in->data[i].y == F->y) continue;
+            if (i == FIndex) continue;
             if (is_left_turn(C, &in->data[i], N)) N = &in->data[i];
         }
         C = N;
-    } while (F->x != C->x || F->y != C->y);
+    } while (!vec_equals(F, C));
 }
 
 /**
