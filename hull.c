@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 
 #define BUFFSIZE 100
 
@@ -25,9 +26,8 @@ struct vecset {
     size_t capacity;
 };
 
-const int A = 2;
+const int GROW_THRESHOLD = 2;
 
-// Functions on vectors
 /**
  * Creates a vector
  * @param x The x coordinate
@@ -55,7 +55,7 @@ void vec_print(struct vec *self) {
  * @param v2 The second vector
  * @return The dot of the two vectors
  */
-double dot(struct vec *v1, struct vec *v2) {
+double dot(const struct vec *v1, const struct vec *v2) {
     return v1->x * v2->x + v1->y * v2->y;
 }
 
@@ -66,7 +66,7 @@ double dot(struct vec *v1, struct vec *v2) {
  * @param v3 The third vector
  * @return The cross product of the vectors
  */
-double cross(struct vec *v1, struct vec *v2, struct vec *v3) {
+double cross(const struct vec *v1, const struct vec *v2, const struct vec *v3) {
     return (v2->x - v1->x) * (v3->y - v1->y) - (v2->y - v1->y) * (v3->x - v1->x);
 }
 
@@ -77,7 +77,7 @@ double cross(struct vec *v1, struct vec *v2, struct vec *v3) {
  * @param v3 The third vector
  * @return true if the vectors are in a left turn, false otherwise
  */
-bool is_left_turn(struct vec *v1, struct vec *v2, struct vec *v3) {
+bool is_left_turn(const struct vec *v1, const struct vec *v2, const struct vec *v3) {
     return cross(v1, v2, v3) > 0;
 }
 
@@ -91,7 +91,6 @@ bool vec_equals(const struct vec *v1, const struct vec *v2) {
     return v1->x == v2->x && v1->y == v2->y;
 }
 
-// Functions on vector sets
 /**
  * Creates a vecset and allocated its default capacity
  * @param self The vecset to create
@@ -127,7 +126,7 @@ void vecset_print(struct vecset *self) {
  * @param self The vecset to grow
  */
 void vecset_grow(struct vecset *self) {
-    self->capacity *= A;
+    self->capacity *= GROW_THRESHOLD;
     struct vec *new = calloc(self->capacity, sizeof(struct vec));
     memcpy(new, self->data, self->size * sizeof(struct vec));
     free(self->data);
@@ -143,6 +142,23 @@ void vecset_add(struct vecset *self, struct vec p) {
     if (self->size == self->capacity) vecset_grow(self);
     self->data[self->size] = p;
     self->size++;
+}
+
+/**
+ * Copies a vecset
+ * @param self The vecset to copy
+ * @return A pointer to the copied vecset
+ */
+struct vecset *vecset_copy(const struct vecset *self) {
+    struct vecset *new = malloc(sizeof(struct vecset));
+    vecset_create(new);
+    for (size_t i = 0; i < self->size; i++) {
+        struct vec newVec;
+        newVec.x = self->data[i].x;
+        newVec.y = self->data[i].y;
+        vecset_add(new, newVec);
+    }
+    return new;
 }
 
 /**
@@ -280,16 +296,6 @@ void vecset_push(struct vecset *self, struct vec p) {
 }
 
 /**
- * Returns the second element of a vecset from the end
- * @param self The vecset to get the vector from
- * @return The second last vector of the vecset
- */
-const struct vec *vecset_second(const struct vecset *self) {
-    assert(self->size > 1);
-    return &self->data[self->size - 2];
-}
-
-/**
  * Removes the last vector of a vecset
  * @param self The vecset to remove a vector from
  */
@@ -306,6 +312,16 @@ void vecset_pop(struct vecset *self) {
 const struct vec *vecset_top(const struct vecset *self) {
     assert(self->size > 0);
     return &self->data[self->size - 1];
+}
+
+/**
+ * Returns the second element of a vecset from the end
+ * @param self The vecset to get the vector from
+ * @return The second last vector of the vecset
+ */
+const struct vec *vecset_second(const struct vecset *self) {
+    assert(self->size > 1);
+    return &self->data[self->size - 2];
 }
 
 /**
@@ -515,10 +531,151 @@ void jarvis_march(const struct vecset *in, struct vecset *out) {
         struct vec *N = &in->data[FIndex];
         for (size_t i = 0; i < in->size; i++) {
             if (i == FIndex) continue;
-            if (is_left_turn(C, &in->data[i], N)) N = &in->data[i];
+            if (is_left_turn(C, &in->data[i], N) || vec_equals(N, C)) N = &in->data[i];
         }
         C = N;
     } while (!vec_equals(F, C));
+}
+
+/**
+ * Returns the point of the vecset with the lowest y. If two vectors have the same y, the one with the lowest x is
+ * chosen
+ * @param self The vecset to find the vector in
+ * @return A pointer to the lowest vector in the vecset
+ */
+struct vec *vecset_lowest_point(const struct vecset *self) {
+    assert(self->size > 0);
+    struct vec *lowest = &self->data[0];
+    for (size_t i = 1; i < self->size; i++) {
+        if (self->data[i].y > lowest->y) lowest = &self->data[i];
+        else if (self->data[i].y == lowest->y) lowest = self->data[i].x < lowest->x ? &self->data[i] : lowest;
+    }
+    return lowest;
+}
+
+int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) {
+    struct vec *B = (struct vec *) ctx;
+    double v1B = atan2(B->y - v1->y, B->x - v1->x);
+    double v2B = atan2(B->y - v2->y, B->x - v2->x);
+    double difference = v1B - v2B;
+    return difference == 0 ? 0 : (difference > 0 ? 1 : -1);
+}
+
+void graham_scan(const struct vecset *in, struct vecset *out) {
+    struct vecset *input = vecset_copy(in);
+    struct vec *B = vecset_lowest_point(input);
+    vecset_push(out, *B);
+    vecset_sort(input, &comp_vec_angle, B);
+    // vecset_print(input);
+    struct vec *F = &input->data[0];
+    vecset_push(out, *F);
+    for (size_t i = 1; i < input->size; i++) {
+        if (vec_equals(&input->data[i], B)) continue;
+        if (vec_equals(&input->data[i], F)) continue;
+        const struct vec *T = vecset_top(out);
+        const struct vec *S = vecset_second(out);
+        while (out->size >= 2 && (is_left_turn(S, T, &input->data[i]))) vecset_pop(out);
+        vecset_push(out, input->data[i]);
+    }
+    vecset_destroy(input);
+    free(input);
+}
+
+/**
+ * Calculates the distance between two vectors
+ * @param v1 The first vector
+ * @param v2 The second vector
+ * @return The distance between the two vectors
+ */
+double vec_distance(const struct vec *v1, const struct vec *v2) {
+    return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
+}
+
+/**
+ * Returns the distance of the point M from the line XY using the equation to find the height of a triangle (with XY as
+ * the base of the triangle)
+ * @param X The first point of the line
+ * @param Y The second point of the line
+ * @param M The point to calculate the distance from the line
+ * @return The distance of the point M from the line XY
+ */
+double vec_distance_to_line(const struct vec *X, const struct vec *Y, const struct vec *M) {
+    double a = vec_distance(X, M);
+    double b = vec_distance(X, Y);
+    double c = vec_distance(Y, M);
+    return (0.5 / b) * sqrt(a + b + c) * sqrt(-a + b + c) * sqrt(a - b + c) * sqrt(a + b - c);
+}
+
+struct vecset *findHull(const struct vecset *S, const struct vec *X, const struct vec *Y) {
+    struct vecset *out = malloc(sizeof(struct vecset));
+    vecset_create(out);
+    if (S->size == 0) return out;
+    struct vec *M = &S->data[0];
+    double M_distance = vec_distance_to_line(X, Y, M);
+    for (size_t i = 1; i < S->size; i++) {
+        double i_distance = vec_distance_to_line(X, Y, &S->data[i]);
+        if (i_distance > M_distance) {
+            M = &S->data[i];
+            M_distance = i_distance;
+        }
+    }
+    struct vecset *s1 = malloc(sizeof(struct vecset));
+    vecset_create(s1);
+    struct vecset *s2 = malloc(sizeof(struct vecset));
+    vecset_create(s2);
+    for (size_t i = 0; i < S->size; i++) {
+        if (vec_equals(M, &S->data[i])) continue;
+        if (is_left_turn(X, M, &S->data[i])) vecset_add(s1, S->data[i]);
+        if (is_left_turn(M, Y, &S->data[i])) vecset_add(s2, S->data[i]);
+    }
+    struct vecset *r1 = findHull(s1, X, M);
+    vecset_destroy(s1);
+    free(s1);
+    struct vecset *r2 = findHull(s2, M, Y);
+    vecset_destroy(s2);
+    free(s2);
+    for (size_t i = 0; i < r1->size; i++) vecset_add(out, r1->data[i]);
+    vecset_add(out, *M);
+    for (size_t i = 0; i < r2->size; i++) vecset_add(out, r2->data[i]);
+    vecset_destroy(r1);
+    free(r1);
+    vecset_destroy(r2);
+    free(r2);
+    return out;
+}
+
+void quickHull(const struct vecset *in, struct vecset *out) {
+    struct vec *A = &in->data[0];
+    struct vec *B = &in->data[0];
+    // Find leftmost and rightmost point
+    for (size_t i = 0; i < in->size; i++) {
+        if (in->data[i].x < A->x) A = &in->data[i];
+        if (in->data[i].x > B->x) B = &in->data[i];
+    }
+    struct vecset *s1 = malloc(sizeof(struct vecset));
+    vecset_create(s1);
+    struct vecset *s2 = malloc(sizeof(struct vecset));
+    vecset_create(s2);
+    for (size_t i = 0; i < in->size; i++) {
+        if (vec_equals(&in->data[i], A)) continue;
+        if (vec_equals(&in->data[i], B)) continue;
+        if (is_left_turn(A, B, &in->data[i])) vecset_add(s1, in->data[i]);
+        else vecset_add(s2, in->data[i]);
+    }
+    struct vecset *r1 = findHull(s1, A, B);
+    vecset_destroy(s1);
+    free(s1);
+    struct vecset *r2 = findHull(s2, B, A);
+    vecset_destroy(s2);
+    free(s2);
+    vecset_add(out, *A);
+    for (size_t i = 0; i < r1->size; i++) vecset_add(out, r1->data[i]);
+    vecset_add(out, *B);
+    for (size_t i = 0; i < r2->size; i++) vecset_add(out, r2->data[i]);
+    vecset_destroy(r1);
+    free(r1);
+    vecset_destroy(r2);
+    free(r2);
 }
 
 /**
@@ -554,7 +711,7 @@ int main() {
         vecset_add(&in, p);
     }
 
-    jarvis_march(&in, &out);
+    graham_scan(&in, &out);
 
     vecset_print(&out);
 
