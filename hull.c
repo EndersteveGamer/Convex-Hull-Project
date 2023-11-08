@@ -551,22 +551,6 @@ void jarvis_march(const struct vecset *in, struct vecset *out) {
 }
 
 /**
- * Returns the point of the vecset with the lowest y. If two vectors have the same y, the one with the lowest x is
- * chosen
- * @param self The vecset to find the vector in
- * @return A pointer to the lowest vector in the vecset
- */
-struct vec *vecset_lowest_point(const struct vecset *self) {
-    assert(self->size > 0);
-    struct vec *lowest = &self->data[0];
-    for (size_t i = 1; i < self->size; i++) {
-        if (self->data[i].y > lowest->y) lowest = &self->data[i];
-        else if (self->data[i].y == lowest->y) lowest = self->data[i].x < lowest->x ? &self->data[i] : lowest;
-    }
-    return lowest;
-}
-
-/**
  * Compared vectors based on their height. If both vectors have the same height, the one with the lowest absciss is
  * selected
  * @param v1 The first vector
@@ -576,42 +560,8 @@ struct vec *vecset_lowest_point(const struct vecset *self) {
  * vector is higher than the first
  */
 int comp_vec_height(const struct vec *v1, const struct vec *v2, const void *ctx) {
-    if (v1->y == v2->y) return v1->x == v2->y ? 0 : v1->x < v2->x ? 1 : -1;
+    if (v1->y == v2->y) return v1->x == v2->x ? 0 : v1->x < v2->x ? 1 : -1;
     return v1->y < v2->y ? 1 : -1;
-}
-
-/**
- * Compares vectors based on their angle with the vector in the context
- * @param v1 The first vector
- * @param v2 The second vector
- * @param ctx A pointer to a vector
- * @return 0 if both vectors have the same angle with ctx, -1 if v1 has a lower angle, 1 if v2 has a lower angle
- */
-int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) {
-    struct vec *B = (struct vec *) ctx;
-    double v1B = atan2(B->y - v1->y, B->x - v1->x);
-    double v2B = atan2(B->y - v2->y, B->x - v2->x);
-    double difference = v1B - v2B;
-    return difference == 0 ? 0 : (difference > 0 ? 1 : -1);
-}
-
-void graham_scan(const struct vecset *in, struct vecset *out) {
-    struct vecset *input = vecset_copy(in);
-    const struct vec *B = vecset_min(in, &comp_vec_height, NULL);
-    vecset_push(out, *B);
-    vecset_sort(input, &comp_vec_angle, B);
-    struct vec F = input->data[0];
-    vecset_push(out, F);
-    for (size_t i = 1; i < input->size; i++) {
-        if (vec_equals(&input->data[i], B)) continue;
-        if (vec_equals(&input->data[i], &F)) continue;
-        const struct vec *T = vecset_top(out);
-        const struct vec *S = vecset_second(out);
-        while (out->size >= 2 && !is_left_turn(S, T, &input->data[i])) vecset_pop(out);
-        vecset_push(out, input->data[i]);
-    }
-    vecset_destroy(input);
-    free(input);
 }
 
 /**
@@ -622,6 +572,52 @@ void graham_scan(const struct vecset *in, struct vecset *out) {
  */
 double vec_distance(const struct vec *v1, const struct vec *v2) {
     return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
+}
+
+/**
+ * <p>
+ *      Compares vectors based on their angle with the vector in the context
+ * </p>
+ *  <p>
+ *      If both angles are equals, the vectors are compared based on their distance with the vector in the context
+ *  </p>
+ * @param v1 The first vector
+ * @param v2 The second vector
+ * @param ctx A pointer to a vector
+ * @return -1 if v1 has a lower angle, 1 if v2 has a lower angle, 1 if both vectors have the same angle and v1 is closer
+ * to ctx than v2, else -1
+ */
+int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) {
+    struct vec *B = (struct vec *) ctx;
+    double v1B = atan2(B->y - v1->y, B->x - v1->x);
+    double v2B = atan2(B->y - v2->y, B->x - v2->x);
+    double difference = v1B - v2B;
+    if (difference == 0) return vec_distance(B, v1) > vec_distance(B, v2) ? -1 : 1;
+    return difference == 0 ? 0 : (difference > 0 ? 1 : -1);
+}
+
+void graham_scan(const struct vecset *in, struct vecset *out) {
+    struct vecset *input = vecset_copy(in);
+    const struct vec *B = vecset_min(in, &comp_vec_height, NULL);
+    vecset_push(out, *B);
+    vecset_sort(input, &comp_vec_angle, B);
+    struct vec F = input->data[1];
+    vecset_push(out, F);
+    vecset_push(out, input->data[2]);
+    for (size_t i = 3; i < input->size; i++) {
+        if (vec_equals(&input->data[i], B)) continue;
+        if (vec_equals(&input->data[i], &F)) continue;
+        const struct vec *T = vecset_top(out);
+        const struct vec *S = vecset_second(out);
+        while (out->size >= 2 && !is_left_turn(S, T, &input->data[i])) {
+            vecset_pop(out);
+            T = vecset_top(out);
+            S = vecset_second(out);
+        }
+        vecset_push(out, input->data[i]);
+    }
+    vecset_destroy(input);
+    free(input);
 }
 
 /**
@@ -639,7 +635,15 @@ double vec_distance_to_line(const struct vec *X, const struct vec *Y, const stru
     return (0.5 / b) * sqrt(a + b + c) * sqrt(-a + b + c) * sqrt(a - b + c) * sqrt(a + b - c);
 }
 
-struct vecset *findHull(const struct vecset *S, const struct vec *X, const struct vec *Y) {
+/**
+ * The second part of the quickhull algorithm
+ * @param S A vecset
+ * @param X The X vector of the quickhull algorithm
+ * @param Y The Y vector of the quickhull algorithm
+ * @return A vecset corresponding to the result of findHull for vectors on the left of the line XY and the result for
+ * vectors on the right of the line XY
+ */
+struct vecset *findhull(const struct vecset *S, const struct vec *X, const struct vec *Y) {
     struct vecset *out = malloc(sizeof(struct vecset));
     vecset_create(out);
     if (S->size == 0) return out;
@@ -661,10 +665,10 @@ struct vecset *findHull(const struct vecset *S, const struct vec *X, const struc
         if (is_left_turn(X, M, &S->data[i])) vecset_add(s1, S->data[i]);
         if (is_left_turn(M, Y, &S->data[i])) vecset_add(s2, S->data[i]);
     }
-    struct vecset *r1 = findHull(s1, X, M);
+    struct vecset *r1 = findhull(s1, X, M);
     vecset_destroy(s1);
     free(s1);
-    struct vecset *r2 = findHull(s2, M, Y);
+    struct vecset *r2 = findhull(s2, M, Y);
     vecset_destroy(s2);
     free(s2);
     for (size_t i = 0; i < r1->size; i++) vecset_add(out, r1->data[i]);
@@ -677,7 +681,12 @@ struct vecset *findHull(const struct vecset *S, const struct vec *X, const struc
     return out;
 }
 
-void quickHull(const struct vecset *in, struct vecset *out) {
+/**
+ * Finds the convex hull of a vecset using a quickhull algorithm
+ * @param in The vecset containing the vectors
+ * @param out A vecset containing the vectors belonging to the convex hull
+ */
+void quickhull(const struct vecset *in, struct vecset *out) {
     struct vec *A = &in->data[0];
     struct vec *B = &in->data[0];
     // Find leftmost and rightmost point
@@ -695,10 +704,10 @@ void quickHull(const struct vecset *in, struct vecset *out) {
         if (is_left_turn(A, B, &in->data[i])) vecset_add(s1, in->data[i]);
         else vecset_add(s2, in->data[i]);
     }
-    struct vecset *r1 = findHull(s1, A, B);
+    struct vecset *r1 = findhull(s1, A, B);
     vecset_destroy(s1);
     free(s1);
-    struct vecset *r2 = findHull(s2, B, A);
+    struct vecset *r2 = findhull(s2, B, A);
     vecset_destroy(s2);
     free(s2);
     vecset_add(out, *A);
@@ -744,7 +753,7 @@ int main() {
         vecset_add(&in, p);
     }
 
-    graham_scan(&in, &out);
+    jarvis_march(&in, &out);
 
     vecset_print(&out);
 
