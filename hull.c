@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+#include <stddef.h>
 
 #define BUFFSIZE 100
 
@@ -45,7 +46,7 @@ struct vec vec_create(double x, double y) {
  * Prints a vector in the console
  * @param self The vector to print
  */
-void vec_print(struct vec *self) {
+void vec_print(const struct vec *self) {
     printf("x: %f, y: %f", self->x, self->y);
 }
 
@@ -237,7 +238,8 @@ void vec_array_merge(struct vec *a1, size_t size1, struct vec *a2, size_t size2,
  * @param size The size of the array
  */
 void vec_array_split(struct vec *a1, struct vec *a2, struct vec *split, size_t size) {
-    size_t index1 = 0, index2 = 0;
+    size_t index1 = 0;
+    size_t index2 = 0;
     size_t i = 0;
     for (; i < size / 2; i++) {
         a1[index1] = split[i];
@@ -257,23 +259,33 @@ void vec_array_split(struct vec *a1, struct vec *a2, struct vec *split, size_t s
  * @param ctx The context for the comparison function
  */
 void vec_array_merge_sort(struct vec *array, size_t size, comp_func_t func, const void *ctx) {
-    if (size == 1) return;
+    if (size <= 1) return;
     if (size == 2) {
-        if (func(&array[0], &array[1], ctx) > 0) {
-            struct vec temp = array[0];
-            array[0] = array[1];
-            array[1] = temp;
-        }
-        return;
+        if (func(&array[0], &array[1], ctx) <= 0) return;
+        struct vec temp = array[0];
+        array[0] = array[1];
+        array[1] = temp;
     }
     size_t size1 = size / 2;
-    size_t size2 = size / 2 + size % 2;
+    size_t size2 = size - size1;
     struct vec *a1 = calloc(size1, sizeof(struct vec));
     struct vec *a2 = calloc(size2, sizeof(struct vec));
     vec_array_split(a1, a2, array, size);
     vec_array_merge_sort(a1, size1, func, ctx);
     vec_array_merge_sort(a2, size2, func, ctx);
     vec_array_merge(a1, size1, a2, size2, array, func, ctx);
+}
+
+void vec_array_bubble_sort(struct vec *data, size_t n, comp_func_t func, const void *ctx) {
+    for (size_t i = 0; i < n - 1; ++i) {
+        for (size_t j = n - 1; j > i; --j) {
+            if (func(&data[j], &data[j - 1], ctx) < 0) {
+                struct vec temp = data[j];
+                data[j] = data[j - 1];
+                data[j - 1] = temp;
+            }
+        }
+    }
 }
 
 /**
@@ -283,7 +295,8 @@ void vec_array_merge_sort(struct vec *array, size_t size, comp_func_t func, cons
  * @param ctx The context for the comparison function
  */
 void vecset_sort(struct vecset *self, comp_func_t func, const void *ctx) {
-    vec_array_merge_sort(self->data, self->size, func, ctx);
+    if (self->size <= 20) vec_array_bubble_sort(self->data, self->size, func, ctx);
+    else vec_array_merge_sort(self->data, self->size, func, ctx);
 }
 
 /**
@@ -553,6 +566,27 @@ struct vec *vecset_lowest_point(const struct vecset *self) {
     return lowest;
 }
 
+/**
+ * Compared vectors based on their height. If both vectors have the same height, the one with the lowest absciss is
+ * selected
+ * @param v1 The first vector
+ * @param v2 The second vector
+ * @param ctx The context (unused)
+ * @return 0 if both vectors are at the same location, 1 if the first vector is higher that the second, -1 if the second
+ * vector is higher than the first
+ */
+int comp_vec_height(const struct vec *v1, const struct vec *v2, const void *ctx) {
+    if (v1->y == v2->y) return v1->x == v2->y ? 0 : v1->x < v2->x ? 1 : -1;
+    return v1->y < v2->y ? 1 : -1;
+}
+
+/**
+ * Compares vectors based on their angle with the vector in the context
+ * @param v1 The first vector
+ * @param v2 The second vector
+ * @param ctx A pointer to a vector
+ * @return 0 if both vectors have the same angle with ctx, -1 if v1 has a lower angle, 1 if v2 has a lower angle
+ */
 int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) {
     struct vec *B = (struct vec *) ctx;
     double v1B = atan2(B->y - v1->y, B->x - v1->x);
@@ -563,18 +597,17 @@ int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) 
 
 void graham_scan(const struct vecset *in, struct vecset *out) {
     struct vecset *input = vecset_copy(in);
-    struct vec *B = vecset_lowest_point(input);
+    const struct vec *B = vecset_min(in, &comp_vec_height, NULL);
     vecset_push(out, *B);
     vecset_sort(input, &comp_vec_angle, B);
-    // vecset_print(input);
-    struct vec *F = &input->data[0];
-    vecset_push(out, *F);
+    struct vec F = input->data[0];
+    vecset_push(out, F);
     for (size_t i = 1; i < input->size; i++) {
         if (vec_equals(&input->data[i], B)) continue;
-        if (vec_equals(&input->data[i], F)) continue;
+        if (vec_equals(&input->data[i], &F)) continue;
         const struct vec *T = vecset_top(out);
         const struct vec *S = vecset_second(out);
-        while (out->size >= 2 && (is_left_turn(S, T, &input->data[i]))) vecset_pop(out);
+        while (out->size >= 2 && !is_left_turn(S, T, &input->data[i])) vecset_pop(out);
         vecset_push(out, input->data[i]);
     }
     vecset_destroy(input);
