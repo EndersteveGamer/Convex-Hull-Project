@@ -27,6 +27,7 @@ struct vecset {
     size_t capacity;
 };
 
+// The multiplier used when growing dynamic arrays
 const int GROW_THRESHOLD = 2;
 
 /**
@@ -72,11 +73,11 @@ double cross(const struct vec *v1, const struct vec *v2, const struct vec *v3) {
 }
 
 /**
- * Checks if three vectors are in a left turn (cross product strictly negative)
+ * Checks if three vectors are in a left turn (cross product strictly positive)
  * @param v1 The first vector
  * @param v2 The second vector
  * @param v3 The third vector
- * @return true if the vectors are in a left turn, false otherwise
+ * @return true if the vectors form a left turn, false otherwise
  */
 bool is_left_turn(const struct vec *v1, const struct vec *v2, const struct vec *v3) {
     return cross(v1, v2, v3) > 0;
@@ -86,14 +87,14 @@ bool is_left_turn(const struct vec *v1, const struct vec *v2, const struct vec *
  * Checks if two vectors are equal
  * @param v1 The first vector
  * @param v2 The second vector
- * @return true if the two vectors are equal, false otherwise
+ * @return true if both vectors are equal, false otherwise
  */
 bool vec_equals(const struct vec *v1, const struct vec *v2) {
     return v1->x == v2->x && v1->y == v2->y;
 }
 
 /**
- * Creates a vecset and allocated its default capacity
+ * Creates a vecset and allocates its default capacity
  * @param self The vecset to create
  */
 void vecset_create(struct vecset *self) {
