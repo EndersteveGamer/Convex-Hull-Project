@@ -597,6 +597,11 @@ int comp_vec_angle(const struct vec *v1, const struct vec *v2, const void *ctx) 
     return difference == 0 ? 0 : (difference > 0 ? 1 : -1);
 }
 
+/**
+ * Finds the convex hull of a vecset using a graham scan algorithm
+ * @param in The vecset containing the vectors
+ * @param out A vecset containing the vectors that are in the convex hull
+ */
 void graham_scan(const struct vecset *in, struct vecset *out) {
     struct vecset *input = vecset_copy(in);
     const struct vec *B = vecset_min(in, &comp_vec_height, NULL);
@@ -685,7 +690,7 @@ struct vecset *findhull(const struct vecset *S, const struct vec *X, const struc
 /**
  * Finds the convex hull of a vecset using a quickhull algorithm
  * @param in The vecset containing the vectors
- * @param out A vecset containing the vectors belonging to the convex hull
+ * @param out A vecset containing the vectors are in the convex hull
  */
 void quickhull(const struct vecset *in, struct vecset *out) {
     struct vec *A = &in->data[0];
